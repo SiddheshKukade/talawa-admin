@@ -24,6 +24,7 @@
     "boxen": "^4.2.0",
     "chalk": "^4.1.0",
     "chart.js": "^3.4.1",
+    "codecov": "^3.8.3",
     "dayjs": "^1.10.7",
     "detect-newline": "^4.0.0",
     "enzyme": "^3.11.0",
@@ -31,9 +32,10 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jest": "^25.3.4",
     "eslint-plugin-prettier": "^3.4.0",
+    "global": "^4.4.0",
     "graphql": "^15.5.1",
     "inquirer": "^8.2.1",
-    "jest": "^27.4.5",
+    "jest": "^27.5.1",
     "jest-docblock": "^27.4.0",
     "markdown-js": "^0.0.4",
     "marked": "^2.0.1",
@@ -57,6 +59,8 @@
     "yarn": "^1.22.17"
   },
   "scripts": {
+    "qw": "jest --coverage",
+    "c": "codecov",
     "serve": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
