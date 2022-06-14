@@ -13,8 +13,10 @@ import { RootState } from '../../state/reducers';
 import { Container } from 'react-bootstrap';
 
 function OrganizationPeople(): JSX.Element {
+  document.title = 'Talawa Members';
+
   const currentUrl = window.location.href.split('=')[1];
-  let data, loading;
+  let data, loading, error;
 
   const appRoutes = useSelector((state: RootState) => state.appRoutes);
   const { targets, configUrl } = appRoutes;
@@ -22,21 +24,36 @@ function OrganizationPeople(): JSX.Element {
   const [t, setT] = React.useState(0);
 
   if (t == 0) {
-    const { data: data_2, loading: loading_2 } = useQuery(MEMBERS_LIST, {
+    const {
+      data: data_2,
+      loading: loading_2,
+      error: error_2,
+    } = useQuery(MEMBERS_LIST, {
       variables: { id: currentUrl },
     });
     data = data_2;
     loading = loading_2;
+    error = error_2;
   } else if (t == 1) {
-    const { data: data_2, loading: loading_2 } = useQuery(ADMIN_LIST, {
+    const {
+      data: data_2,
+      loading: loading_2,
+      error: error_2,
+    } = useQuery(ADMIN_LIST, {
       variables: { id: currentUrl },
     });
     data = data_2;
     loading = loading_2;
-  } else if (t == 2) {
-    const { data: data_2, loading: loading_2 } = useQuery(USER_LIST);
+    error = error_2;
+  } else {
+    const {
+      data: data_2,
+      loading: loading_2,
+      error: error_2,
+    } = useQuery(USER_LIST);
     data = data_2;
     loading = loading_2;
+    error = error_2;
   }
 
   if (loading) {
@@ -45,6 +62,11 @@ function OrganizationPeople(): JSX.Element {
         <div className={styles.loader}></div>
       </>
     );
+  }
+
+  /* istanbul ignore next */
+  if (error) {
+    window.location.href = '/orglist';
   }
 
   return (
@@ -92,7 +114,7 @@ function OrganizationPeople(): JSX.Element {
                     setT(0);
                   }}
                 />
-                <label>Members</label>
+                <label htmlFor="memberslist">Members</label>
                 <input
                   id="adminslist"
                   value="adminslist"
@@ -103,10 +125,10 @@ function OrganizationPeople(): JSX.Element {
                     setT(1);
                   }}
                 />
-                <label>Admins</label>
+                <label htmlFor="adminslist">Admins</label>
                 <input
-                  id="adminslist"
-                  value="adminslist"
+                  id="userslist"
+                  value="userslist"
                   name="displaylist"
                   type="radio"
                   defaultChecked={t == 2 ? true : false}
@@ -114,7 +136,7 @@ function OrganizationPeople(): JSX.Element {
                     setT(2);
                   }}
                 />
-                <label>User</label>
+                <label htmlFor="userslist">Users</label>
               </div>
             </div>
           </div>
@@ -191,7 +213,8 @@ function OrganizationPeople(): JSX.Element {
                       }
                     )
                   : null
-                : null}
+                : /* istanbul ignore next */
+                  null}
             </div>
           </Container>
         </Col>

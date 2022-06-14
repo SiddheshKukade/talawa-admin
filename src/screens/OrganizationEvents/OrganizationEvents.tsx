@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from 'state/reducers';
 
 function OrganizationEvents(): JSX.Element {
+  document.title = 'Talawa Events';
   const [eventmodalisOpen, setEventModalIsOpen] = React.useState(false);
 
   const appRoutes = useSelector((state: RootState) => state.appRoutes);
@@ -44,7 +45,7 @@ function OrganizationEvents(): JSX.Element {
   });
   const currentUrl = window.location.href.split('=')[1];
 
-  const { data, loading } = useQuery(ORGANIZATION_EVENT_LIST, {
+  const { data, loading, error } = useQuery(ORGANIZATION_EVENT_LIST, {
     variables: { id: currentUrl },
   });
 
@@ -64,9 +65,12 @@ function OrganizationEvents(): JSX.Element {
         allDay: alldaychecked,
       },
     });
-    console.log(data);
-    window.alert('Congratulation the Event is created');
-    window.location.reload();
+
+    /* istanbul ignore next */
+    if (data) {
+      window.alert('Congratulation the Event is created');
+      window.location.reload();
+    }
   };
 
   if (loading || loading_2) {
@@ -77,7 +81,10 @@ function OrganizationEvents(): JSX.Element {
     );
   }
 
-  console.log(data);
+  /* istanbul ignore next */
+  if (error) {
+    window.location.href = '/orglist';
+  }
 
   return (
     <>
@@ -114,6 +121,7 @@ function OrganizationEvents(): JSX.Element {
                 variant="success"
                 className={styles.addbtn}
                 onClick={showInviteModal}
+                data-testid="createEventModalBtn"
               >
                 <i className="fa fa-plus"></i> Add Event
               </Button>
@@ -151,12 +159,17 @@ function OrganizationEvents(): JSX.Element {
           overlay: { backgroundColor: 'grey' },
         }}
         className={styles.modalbody}
+        ariaHideApp={false}
       >
         <section id={styles.grid_wrapper}>
           <div className={styles.form_wrapper}>
             <div className={styles.flexdir}>
               <p className={styles.titlemodal}>Event Details</p>
-              <a onClick={hideInviteModal} className={styles.cancel}>
+              <a
+                onClick={hideInviteModal}
+                className={styles.cancel}
+                data-testid="createEventModalCloseBtn"
+              >
                 <i className="fa fa-times"></i>
               </a>
             </div>
@@ -199,6 +212,7 @@ function OrganizationEvents(): JSX.Element {
                     id="startdate"
                     selected={startDate}
                     onChange={(date: Date | null) => setStartDate(date)}
+                    placeholderText="Start Date"
                   />
                 </div>
                 <div>
@@ -208,6 +222,7 @@ function OrganizationEvents(): JSX.Element {
                     id="enddate"
                     selected={endDate}
                     onChange={(date: Date | null) => setEndDate(date)}
+                    placeholderText="End Date"
                   />
                 </div>
               </div>
@@ -242,7 +257,7 @@ function OrganizationEvents(): JSX.Element {
                   />
                 </div>
                 <div className={styles.dispflex}>
-                  <label htmlFor="visible">Is Registrable?</label>
+                  <label htmlFor="registrable">Is Registrable?</label>
                   <input
                     id="registrable"
                     type="checkbox"
@@ -256,6 +271,7 @@ function OrganizationEvents(): JSX.Element {
                 className={styles.greenregbtn}
                 value="createevent"
                 onClick={CreateEvent}
+                data-testid="createEventBtn"
               >
                 Create Event
               </button>
